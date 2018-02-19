@@ -93,10 +93,11 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	/**
 	 * Builds a complete tree from the elements in the tree.
 	 */
-//	public void rebuild() {
-//		E[] a = (E[]) new Comparable[size];
-//	 	toArray(root, a, 0);
-//	}
+	public void rebuild() {
+		E[] a = (E[]) new Comparable[size];
+	 	toArray(root, a, 0);
+		root = buildTree(a, 0, size - 1);
+	}
 
 	/*
 	 * Adds all elements from the tree rooted at n in inorder to the array a
@@ -104,14 +105,16 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * Returns the index of the last inserted element + 1 (the first empty
 	 * position in a).
 	 */
-	public int toArray(BinaryNode<Integer> n, int[] a, int index) {
-		if(n == null){
+	private int toArray(BinaryNode<E> n, E[] a, int index) {
+		if (n != null) {
+			index = toArray(n.left, a, index);
+			a[index] = n.element;
+			System.out.println("Värde: " + n.element + ", plats: " + index + '\n');
+			index++;
+			index = toArray(n.right, a, index);
 			return index;
 		} else {
-			int index1 = toArray(n.left, a, index);
-			a[index1] = n.element;
-			index1 = toArray(n.right, a, index1 + 1);
-			return index1;
+			return index;
 		}
 	}
 
@@ -121,7 +124,18 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * Returns the root of tree.
 	 */
 	private BinaryNode<E> buildTree(E[] a, int first, int last) {
-		return null;
+		if (first > last) {
+			return null;
+		} else {
+
+			int mid = (first + last) / 2;
+			BinaryNode<E> node = new BinaryNode<E>(a[mid]);
+
+			node.left = buildTree(a, first, mid - 1);
+			node.right = buildTree(a, mid + 1, last);
+
+			return node;
+		}
 	}
 
 	static class BinaryNode<E> {
@@ -136,10 +150,23 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 
 	public static void main(String[] args) {
 		BinarySearchTree<Integer> tree = new BinarySearchTree<Integer>();
+		BSTVisualizer canvas = new BSTVisualizer("canvas", 400, 400);
 		tree.add(6);
 		tree.add(4);
 		tree.add(7);
-		int[] a = new int[3];
-	 	System.out.println(tree.toArray(tree.root, a, 0));
+		tree.add(1);
+		tree.add(2);
+		tree.add(13);
+		tree.add(14);
+		tree.add(15);
+		tree.add(16);
+		tree.add(17);
+		tree.add(19);
+		tree.add(18);
+		tree.add(3);
+		tree.rebuild();
+		canvas.drawTree(tree);
+		tree.printTree();
+
 	}
 }
