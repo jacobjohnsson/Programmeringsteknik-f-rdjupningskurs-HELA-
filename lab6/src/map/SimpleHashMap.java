@@ -50,7 +50,7 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 			Entry<K, V> temp = table[index];
 			//Kanske bugg att använda != istället för compare eller compareTo i temp.key != key
 			if(temp != null){
-				while(temp != null && temp.key.equals(key)) {
+				while(temp != null && !temp.key.equals(key)) {
 					temp = temp.next;
 				}
 			}
@@ -78,6 +78,7 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 							System.out.println("While 2");
 							prevCurrent = prevCurrent.next;
 						}
+						current.next = null; 
 						prevCurrent.next = current;
 					}
 					current = temp;
@@ -116,7 +117,7 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 		if(size()%capacity >= capacity*3/4) {
 //			System.out.println("prerehash");
 //			System.out.print(show());
-			rehash();
+	//		rehash();
 //			System.out.println("after rehash");
 //			System.out.print(show());
 		}
