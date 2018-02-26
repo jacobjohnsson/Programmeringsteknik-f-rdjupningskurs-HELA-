@@ -18,9 +18,9 @@ public class TestSimpleHashMap {
 
 	@Before
 	public void setUp() throws Exception {
-//		m = new SimpleHashMap<Integer, Integer>(10);
-//		m16 = new SimpleHashMap<Integer, Integer>();
-//		s = new SimpleHashMap<String, Integer>();
+		m = new SimpleHashMap<Integer, Integer>(10);
+		m16 = new SimpleHashMap<Integer, Integer>();
+		s = new SimpleHashMap<String, Integer>();
 	}
 
 	@After
@@ -157,10 +157,12 @@ public class TestSimpleHashMap {
 			int r = random.nextInt(10000);
 			m16.put(r, r);
 			randNbrs.add(r);
+			System.out.println(m16.size());
 		}
 		for (int i : randNbrs) {			
 			assertEquals("key not found in map:" + i, new Integer(i), m16.remove(i));
 		}
+		System.out.println(m16.size());
 		assertEquals("wrong size():", 0, m16.size());
 	}
 	
@@ -168,11 +170,15 @@ public class TestSimpleHashMap {
 	public final void testManyPutAndGet() {
 		java.util.Random random = new java.util.Random(123456);
 		HashSet<Integer> randNbrs = new HashSet<Integer>();
+		System.out.println("test1");
 		for (int i = 0; i < 100; i++) {
 			int r = random.nextInt(10000);			
 			m16.put(r, r);
 			randNbrs.add(r);
+			System.out.println("test" + i);
+
 		}
+		System.out.println("test3");
 		for (int i : randNbrs) {			
 			assertEquals("key not found in map:" + i, new Integer(i), m16.get(i));
 		}
