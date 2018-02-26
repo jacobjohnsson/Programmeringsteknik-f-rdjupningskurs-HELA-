@@ -117,7 +117,7 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 		if(size()%capacity >= capacity*3/4) {
 //			System.out.println("prerehash");
 //			System.out.print(show());
-	//		rehash();
+			rehash();
 //			System.out.println("after rehash");
 //			System.out.print(show());
 		}
