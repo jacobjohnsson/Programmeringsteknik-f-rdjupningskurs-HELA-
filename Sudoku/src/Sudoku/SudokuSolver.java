@@ -8,12 +8,13 @@ private boolean[][] immutableBoard;
 public TreeSet<Integer> correctInput;
 
 	/***
-	 * Constructor - fills board with rows and colums and set them to zero.
+	 * Constructor - fills board with rows and colums and sets them to zero.
+	 *
 	 */
 	public SudokuSolver() {
 		// Accepterade input
 		correctInput = new TreeSet<Integer>();
-		for(int n = 1; n < 10 ; n++) {
+		for(int n = 0; n < 10 ; n++) {
 			correctInput.add(n);
 		}
 
@@ -32,7 +33,7 @@ public TreeSet<Integer> correctInput;
 	 * Gets the value at row, colum.
 	 * @param row
 	 * @param colum
-	 * @return
+	 * @return int at location.
 	 */
 	public int getValue(int row, int col) {
 		if(!correctInput.contains(row + 1)
@@ -71,20 +72,23 @@ public TreeSet<Integer> correctInput;
 			&& correctInput.contains(col + 1)){
 				board[row][col] = value;
 		} else {
-			System.out.println("Funktion setValueRecursive: value " + value + ", row " + row + ", col " + col);
+			//System.out.println("Funktion setValueRecursive: value " + value + ", row " + row + ", col " + col);
 		}
 	}
 
 	/***
 	 * Looks if currentplacement is in conflict with another number acordning to the laws of Sudoko
+	 * @param row
+	 * @param column
+	 * @return boolean
 	 */
 	private boolean isInConflict(int row, int col) {
 		//3 rules: region, rad och kolumn - i rader och j kolumner
 		if(row > 8 || col > 8) {
-			return false; 
+			return false;
 		}
 		int value = board[row][col];
-		
+
 		//regionen check.
 		int rowRegionStart = (row - row % 3);
 		int colRegionStart = (col - col % 3);
@@ -114,22 +118,12 @@ public TreeSet<Integer> correctInput;
 
 		return false;
 	}
-	
-	public void fill() {
-		for(int i = 0; i < 9; i++) {
-			for(int j = 0; j < 9; j++) {
-				if(board[i][j] != 0) {
-					immutableBoard[i][j] = true;
-				}
-			}
-		}
-	}
 
 	/***
-	 * Anropar den privata rekursiva metoden.
-
+	 * Solves the soduko.
+	 * @return false if no solution, true if solution was found.
 	 */
-	public void solve() {
+	public boolean solve() {
 		for(int i = 0; i < 9; i++) {
 			for(int j = 0; j < 9; j++) {
 				if(board[i][j] != 0) {
@@ -140,65 +134,45 @@ public TreeSet<Integer> correctInput;
 		System.out.println();
 		printSudokuImmutable();
 		System.out.println();
-		solve2(0, 0);
+		return solve(0, 0);
 	}
 
 	/***
-	 * Den privata solve methoden. Här löses det nuvarande brädet.
-	 * @param board
+	 * Recursive algorithm for solving the soduko.
+	 * @param row
+	 * @param column
+	 * @return boolean
 	 */
-	public boolean solve2(int row, int col) {
+	public boolean solve(int row, int col) {
+
 		if(row == 9) {
 			return true;
 		} else {
 			if(col > 8) {
-				return solve2(row + 1, 0);	
-			} else if(immutableBoard[row][col]) {
-				return solve2(row, col + 1);
-			} else {
+				return solve(row + 1, 0);
+			} else if (!immutableBoard[row][col]){
 				for(int v = 1; v < 10; v++ ) {
 					setValueRecursive(v, row, col);
 					System.out.println();
-					printSudoku(); 
+					printSudoku();
 					if(!isInConflict(row, col)) {
-						if(solve2(row, col + 1)) {
-							return true; 
+						if(solve(row, col + 1)) {
+							return true;
+						} else{
+							setValueRecursive(0, row, col);
 						}
 					}
 					setValueRecursive(0, row, col);
-				}	
-			} 
+				}
+			} else {
+				return solve(row, col + 1);
+			}
 		}
 		return false;
 	}
-	
-	/***
-	 * Den privata solve methoden. Här löses det nuvarande brädet.
-	 * @param board
-	 */
-//	private boolean solve(int value, int row, int col) {
-//		if(row == 9) {
-//			return true;
-//		} else {
-//			if(col < 9 && row < 9 && immutableBoard[row][col]) {
-//				return solve(1, row, col + 1);
-//			}
-//			setValueRecursive(value, row, col);
-//			System.out.println();
-//			printSudoku();
-//			
-//			if (isInConflict(row, col)) {
-//				return solve(value + 1, row, col);
-//			} else if (col == 9) {
-//				return solve(1, row + 1, 0);
-//			} else {
-//				return solve(1, row, col + 1);
-//			}
-//		}
-//	}
 
 	/***
-	 * Prints the board.
+	 * Prints the board to console.
 	 */
 	public void printSudoku(){
 		for(int i = 0; i < 9; i++) {
@@ -210,7 +184,7 @@ public TreeSet<Integer> correctInput;
 	}
 
 	/***
-	 * Prints the immutableBoard.
+	 * Prints the immutableBoardto console.
 	 */
 	public void printSudokuImmutable(){
 		for(int i = 0; i < 9; i++) {
