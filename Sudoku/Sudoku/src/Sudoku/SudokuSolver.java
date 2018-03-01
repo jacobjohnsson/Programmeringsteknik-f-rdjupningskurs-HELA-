@@ -5,11 +5,11 @@ import java.util.TreeSet;
 public class SudokuSolver {
 private int[][] board;
 private boolean[][] immutableBoard;
-public TreeSet<Integer> correctInput;
-public TreeSet<Integer> correctInputRecursive;
+private TreeSet<Integer> correctInput;
+private TreeSet<Integer> correctInputRecursive;
 
 	/***
-	 * Constructor - fills board with rows and colums and set them to zero.
+	 * Constructor - fills board with rows and colums and set them to zero. Also instantiating other atributes.
 	 */
 	public SudokuSolver() {
 		// Accepterade input user
@@ -37,7 +37,7 @@ public TreeSet<Integer> correctInputRecursive;
 	/***
 	 * Gets the value at row, colum.
 	 * @param row
-	 * @param colum
+	 * @param col
 	 * @return int at location.
 	 */
 	public int getValue(int row, int col) {
@@ -50,25 +50,22 @@ public TreeSet<Integer> correctInputRecursive;
 	}
 
 	/***
-	 * Sets the value at row, colum.
+	 * Sets the value at row, column.
 	 * @param value
 	 * @param row
-	 * @param column
+	 * @param col
 	 */
 	public void setValue(int value, int row, int col) {
-		if(correctInput.contains(value)
+		if(correctInputRecursive.contains(value)
 			&& correctInput.contains(row + 1)
 			&& correctInput.contains(col + 1)){
 				board[row][col] = value;
+				if(value == 0) {
+					immutableBoard[row][col] = false;
+				}
 		}
 	}
 
-	/***
-	 * Sets the value at row, colum when in recursive method.
-	 * @param value
-	 * @param row
-	 * @param column
-	 */
 	private void setValueRecursive(int value, int row, int col) {
 		if(correctInputRecursive.contains(value)
 			&& correctInput.contains(row + 1)
@@ -78,9 +75,9 @@ public TreeSet<Integer> correctInputRecursive;
 	}
 
 	/***
-	 * Looks if currentplacement is in conflict with another number acordning to the laws of Sudoko
+	 * Looks if currentplacement is in conflict with another number acordning to the laws of Sudoko. Only public due to testing in JUnit.
 	 * @param row
-	 * @param column
+	 * @param col
 	 * @return boolean
 	 */
 	public boolean isInConflict(int row, int col) {
@@ -138,10 +135,11 @@ public TreeSet<Integer> correctInputRecursive;
 		 * Solves the sudoku.
 		 * @return false if no solution and wrong input or true if solution was found.
 		 */
-	public void solve() {
+	public boolean solve() {
 		if(checkUserInput()) {
 		return solve(0, 0);
 		}
+		return false;
 	}
 
 	/***
@@ -203,4 +201,9 @@ public TreeSet<Integer> correctInputRecursive;
 			System.out.println();
 		}
 	}
+
+	public static void main(String[] args) {
+		System.out.println("Den går att kompilera men gör inget");
+	}
+
 }
